@@ -62,17 +62,33 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+y (y==0) = 10;
+
+X = [ones(m,1) X];
+
+% Compute atwo
+atwo = sigmoid(X*Theta1');
 
 
+% Add ones column to atwo
+colAtwo = size(atwo, 1);
+atwo = [ones(colAtwo,1) atwo];
+
+% Compute athree
+athree = sigmoid(atwo*Theta2');
+
+tempCost = 0;
+
+for i = 1:num_labels
+  
+  tempY = (y == i);
+  
+  tempCost = tempCost + sum( ( (-tempY'*log(athree(:,i))) - ((1-tempY)'*(log(1-athree(:,i)))) ) );
+  
+end
 
 
-
-
-
-
-
-
-
+J = (1/m) * tempCost;
 
 
 
