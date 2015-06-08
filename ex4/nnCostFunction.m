@@ -95,9 +95,7 @@ Delta1 = d2'*a1;
 
 Delta2 = d3'*a2;
 
-Theta1_grad = (1/m)*Delta1;
 
-Theta2_grad = (1/m)*Delta2;
 
 % Part 3: Implement regularization with the cost function and gradients.
 %
@@ -107,12 +105,15 @@ Theta2_grad = (1/m)*Delta2;
 %               and Theta2_grad from Part 2.
 %
 
+Theta1(:,1) = 0;
+Theta2(:,1) = 0;
 
+Theta1 = ((lambda/m)*Theta1);
+Theta2 = ((lambda/m)*Theta2);
 
+Theta1_grad = (1/m)*Delta1+Theta1;
 
-
-
-
+Theta2_grad = (1/m)*Delta2+Theta2;
 
 
 % -------------------------------------------------------------
