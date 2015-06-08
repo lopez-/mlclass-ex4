@@ -41,18 +41,19 @@ Theta2_grad = zeros(size(Theta2));
 
 y (y==0) = 10;
 
-X = [ones(m,1) X];
+y_matrix = eye(num_labels)(y,:);
 
-% Compute atwo
-atwo = sigmoid(X*Theta1');
+a1 = [ones(m,1) X];
 
+z2 = a1*Theta1';
 
-% Add ones column to atwo
-colAtwo = size(atwo, 1);
-atwo = [ones(colAtwo,1) atwo];
+a2 = sigmoid(z2);
 
-% Compute athree
-athree = sigmoid(atwo*Theta2');
+a2 = [ones(size(a2, 1),1) a2];
+
+z3 = a2*Theta2';
+
+a3 = sigmoid(z3);
 
 tempCost = 0;
 
@@ -60,14 +61,13 @@ for i = 1:num_labels
   
   tempY = (y == i);
   
-  tempCost = tempCost + sum( ( (-tempY'*log(athree(:,i))) - ((1-tempY)'*(log(1-athree(:,i)))) ) );
+  tempCost = tempCost + sum( ( (-tempY'*log(a3(:,i))) - ((1-tempY)'*(log(1-a3(:,i)))) ) );
   
 end
 
-regularization = sum(Theta1(:,2:end)(:).^2) + sum(Theta2(:,2:end)(:).^2)
+regularization = sum(Theta1(:,2:end)(:).^2) + sum(Theta2(:,2:end)(:).^2);
 
-
-J = ( (1/m) * tempCost ) + ( (lambda / (2*m) ) * regularization);
+J = ((1/m)*tempCost) + ((lambda/(2*m)) *regularization);
 
 
 %
@@ -87,14 +87,17 @@ J = ( (1/m) * tempCost ) + ( (lambda / (2*m) ) * regularization);
 %               first time.
 %
 
+d3 = a3 - y_matrix;
 
+d2 = (d3*Theta2(:,2:end)).*sigmoidGradient(z2);
 
+Delta1 = d2'*a1;
 
+Delta2 = d3'*a2;
 
+Theta1_grad = (1/m)*Delta1;
 
-
-
-
+Theta2_grad = (1/m)*Delta2;
 
 % Part 3: Implement regularization with the cost function and gradients.
 %
